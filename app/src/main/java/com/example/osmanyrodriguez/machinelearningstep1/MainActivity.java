@@ -23,6 +23,8 @@ import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.Arrays;
@@ -30,6 +32,9 @@ import java.util.Arrays;
 public class MainActivity extends AppCompatActivity {
 
     private TextureView textureView;
+
+    View mButtonView;
+    RelativeLayout mInformationBox;
 
     private String cameraId;
     protected CameraDevice cameraDevice;
@@ -57,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         textureView = findViewById(R.id.camera_display);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
+        mButtonView = findViewById(R.id.button_view);
+        mInformationBox = findViewById(R.id.information_box);
     }
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
@@ -209,4 +216,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void goInformationBox(View view) {
+
+        mButtonView.setVisibility(View.GONE);
+        mInformationBox.setVisibility(View.VISIBLE);
+    }
 }

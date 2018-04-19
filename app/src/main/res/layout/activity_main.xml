@@ -9,17 +9,76 @@
     <TextureView
         android:id="@+id/camera_display"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="match_parent"
         />
 
     <LinearLayout
+        android:layout_marginBottom="25dp"
+        android:orientation="vertical"
+        android:id="@+id/conten_information"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="@drawable/oval"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
+        <View
+            android:onClick="goInformationBox"
+            android:id="@+id/button_view"
+            android:layout_width="100dp"
+            android:layout_height="150dp"/>
     </LinearLayout>
+
+    <RelativeLayout
+        android:background="#FFF"
+        android:id="@+id/information_box"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:padding="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="btn1"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="btn1"/>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="btn1"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="btn1"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
 
 
 </RelativeLayout>
