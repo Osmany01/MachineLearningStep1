@@ -10,6 +10,7 @@
         android:id="@+id/camera_display"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:onClick="hideInformationBox"
         />
 
     <LinearLayout
@@ -30,11 +31,11 @@
     </LinearLayout>
 
     <RelativeLayout
-        android:background="#FFF"
+        android:background="#1AFFFFFF"
         android:id="@+id/information_box"
-        android:visibility="gone"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
+        android:visibility="gone"
         android:padding="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -55,8 +56,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="btn1"/>
-
-
             </LinearLayout>
             <LinearLayout
                 android:orientation="horizontal"
@@ -70,10 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="btn1"/>
-
-
             </LinearLayout>
-
         </LinearLayout>
 
 
