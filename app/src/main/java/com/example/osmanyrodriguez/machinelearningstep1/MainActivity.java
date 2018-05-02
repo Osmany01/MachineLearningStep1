@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
             assert texture != null;
-            texture.setDefaultBufferSize(imageDimension.getWidth(), imageDimension.getHeight());
             Surface surface = new Surface(texture);
             captureRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
             captureRequestBuilder.addTarget(surface);
@@ -131,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
         if(null == cameraDevice) {
             Log.e("MainActivity", "updatePreview error, return");
         }
-        captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_AE_MODE_ON_AUTO_FLASH);
+        captureRequestBuilder.set(CaptureRequest.CONTROL_VIDEO_STABILIZATION_MODE, CameraMetadata.CONTROL_CAPTURE_INTENT_PREVIEW);
         try {
             cameraCaptureSessions.setRepeatingRequest(captureRequestBuilder.build(), null, mBackgroundHandler);
         } catch (CameraAccessException e) {
@@ -187,7 +186,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         Log.e("MainActivity", "onPause");
-        //closeCamera();
         stopBackgroundThread();
         super.onPause();
     }
@@ -208,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goInformationBox(View view) {
-
+        cameraCaptureSessions.close();
         mButtonView.setVisibility(View.GONE);
         mInformationBox.setVisibility(View.VISIBLE);
     }
@@ -216,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
     public void hideInformationBox(View view) {
 
         if(mInformationBox.getVisibility()==View.VISIBLE){
+            openCamera();
             mInformationBox.setVisibility(View.GONE);
             mButtonView.setVisibility(View.VISIBLE);
         }
