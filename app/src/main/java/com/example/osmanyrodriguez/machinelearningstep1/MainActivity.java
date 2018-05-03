@@ -24,6 +24,8 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -209,6 +211,9 @@ public class MainActivity extends AppCompatActivity {
         cameraCaptureSessions.close();
         mButtonView.setVisibility(View.GONE);
         mInformationBox.setVisibility(View.VISIBLE);
+        Animation animation;
+        animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_in_top);
+        mInformationBox.setAnimation(animation);
     }
 
     public void hideInformationBox(View view) {
@@ -217,6 +222,9 @@ public class MainActivity extends AppCompatActivity {
             openCamera();
             mInformationBox.setVisibility(View.GONE);
             mButtonView.setVisibility(View.VISIBLE);
+            Animation animation;
+            animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.slide_out_top);
+            mInformationBox.setAnimation(animation);
         }
     }
 }
