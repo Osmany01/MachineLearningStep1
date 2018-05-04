@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">MachineLearningStep1</string>
+    <string name="app_name">FindMeOne</string>
+    <string name="Buy">Buy</string>
 </resources>
