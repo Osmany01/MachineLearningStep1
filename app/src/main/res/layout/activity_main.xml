@@ -21,18 +21,19 @@
         android:orientation="vertical">
 
         <View
+            android:background="@drawable/oval"
             android:id="@+id/button_view"
-            android:layout_width="100dp"
-            android:layout_height="150dp"
-            android:background="@drawable/oval" />
+            android:layout_width="125dp"
+            android:layout_height="125dp"
+            />
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/information_box"
-        android:layout_marginBottom="30dp"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:layout_width="300dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
         android:layout_height="210dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -63,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:text="Nike Air Max 270"
                 tools:text="Nike Air Max 270"
-                android:textColor="#34495E" />
+                android:textColor="@color/blueSecundary" />
         </LinearLayout>
 
         <TextView

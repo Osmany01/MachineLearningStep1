@@ -8,6 +8,9 @@
     <color name="blue">#3498DB</color>
     <color name="blue_ligth">#AED6F1</color>
     <color name="blue_dark">#2E86C1</color>
+    <color name="blueSecundary">#34495E</color>
 
     <color name="red">#E74C3C</color>
+    <color name="white">#FFFFFF</color>
+    <color name="tranparentWithe">#66FFFFFF</color>
 </resources>

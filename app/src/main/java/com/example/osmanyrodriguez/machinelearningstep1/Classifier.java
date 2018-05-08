@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 
 import org.tensorflow.lite.Interpreter;
@@ -16,11 +20,17 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
 
 public abstract class Classifier {
 
+    private static final int SMALL_COLOR = 0xffddaa88;
+    private static final float GOOD_PROB_THRESHOLD = 0.3f;
     protected Interpreter tflite;
     private List<String> labelList;
     protected ByteBuffer imgData = null;
@@ -32,6 +42,15 @@ public abstract class Classifier {
     private static final int FILTER_STAGES = 3;
     private static final float FILTER_FACTOR = 0.4f;
     private int[] intValues = new int[getImageSizeX() * getImageSizeY()];
+    private PriorityQueue<Map.Entry<String, Float>> sortedLabels =
+            new PriorityQueue<>(
+                    RESULTS_TO_SHOW,
+                    new Comparator<Map.Entry<String, Float>>() {
+                        @Override
+                        public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
+                            return (o1.getValue()).compareTo(o2.getValue());
+                        }
+                    });
 
     Classifier(Activity activity) throws IOException {
         tflite = new Interpreter(loadModelFile(activity));
@@ -69,8 +88,62 @@ public abstract class Classifier {
         return labelList;
     }
 
+    private void printTopKLabels(SpannableStringBuilder builder) {
+        for (int i = 0; i < getNumLabels(); ++i) {
+            sortedLabels.add(
+                    new AbstractMap.SimpleEntry<>(labelList.get(i), getNormalizedProbability(i)));
+            if (sortedLabels.size() > RESULTS_TO_SHOW) {
+                sortedLabels.poll();
+            }
+        }
+
+        final int size = sortedLabels.size();
+        for (int i = 0; i < size; i++) {
+            Map.Entry<String, Float> label = sortedLabels.poll();
+            SpannableString span =
+                    new SpannableString(String.format("%s: %4.2f\n", label.getKey(), label.getValue()));
+            int color;
+            // Make it white when probability larger than threshold.
+            if (label.getValue() > GOOD_PROB_THRESHOLD) {
+                color = android.graphics.Color.WHITE;
+            } else {
+                color = SMALL_COLOR;
+            }
+            // Make first item bigger.
+            if (i == size - 1) {
+                float sizeScale = (i == size - 1) ? 1.25f : 0.8f;
+                span.setSpan(new RelativeSizeSpan(sizeScale), 0, span.length(), 0);
+            }
+            span.setSpan(new ForegroundColorSpan(color), 0, span.length(), 0);
+            builder.insert(0, span);
+        }
+    }
+
     protected int getNumLabels() {
         return labelList.size();
+    }
+    void classifyFrame(Bitmap bitmap, SpannableStringBuilder builder) {
+        printTopKLabels(builder);
+
+        if (tflite == null) {
+            Log.e(TAG, "Image classifier has not been initialized; Skipped.");
+            builder.append(new SpannableString("Uninitialized Classifier."));
+        }
+        convertBitmapToByteBuffer(bitmap);
+        // Here's where the magic happens!!!
+        long startTime = SystemClock.uptimeMillis();
+        runInference();
+        long endTime = SystemClock.uptimeMillis();
+        Log.d(TAG, "Timecost to run model inference: " + Long.toString(endTime - startTime));
+
+        // Smooth the results across frames.
+        applyFilter();
+
+        // Print the results.
+        long duration = endTime - startTime;
+        SpannableString span = new SpannableString(duration + " ms");
+        span.setSpan(new ForegroundColorSpan(android.graphics.Color.LTGRAY), 0, span.length(), 0);
+        builder.append(span);
     }
 
     void applyFilter() {
@@ -122,7 +195,11 @@ public abstract class Classifier {
 
     protected abstract void setProbability(int labelIndex, Number value);
 
+    protected abstract float getNormalizedProbability(int labelIndex);
+
     protected abstract String getModelPath();
+
+    protected abstract void runInference();
 
     protected abstract String getLabelPath();
 

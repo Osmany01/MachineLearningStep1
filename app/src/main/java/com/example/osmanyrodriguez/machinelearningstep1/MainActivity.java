@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -21,6 +22,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
@@ -226,6 +229,19 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         }
+    }
+    //endregion
+
+    //region functionality
+    private void classifyFrame() {
+        if (classifier == null || cameraDevice == null) {
+            return;
+        }
+        SpannableStringBuilder textToShow = new SpannableStringBuilder();
+        Bitmap bitmap = mTextureView.getBitmap(classifier.getImageSizeX(), classifier.getImageSizeY());
+        classifier.classifyFrame(bitmap, textToShow);
+        bitmap.recycle();
+
     }
     //endregion
 
